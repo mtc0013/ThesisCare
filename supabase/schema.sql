@@ -256,10 +256,13 @@ create trigger sanitize_msg before insert on public.contact_messages for each ro
 drop trigger if exists sanitize_appt on public.appointments;
 create trigger sanitize_appt before insert on public.appointments for each row execute function public.sanitize_public_row();
 
--- Stop non-admins from changing their own role.
+-- Stop signed-in non-admins from changing roles. (auth.uid() is null in the SQL Editor,
+-- so the project owner can still promote staff there.)
 create or replace function public.protect_role() returns trigger language plpgsql security definer set search_path = public as $$
 begin
-  if new.role is distinct from old.role and not public.is_admin() then raise exception 'Only admins can change roles'; end if;
+  if new.role is distinct from old.role and auth.uid() is not null and not public.is_admin() then
+    raise exception 'Only admins can change roles';
+  end if;
   return new;
 end $$;
 drop trigger if exists protect_role on public.profiles;
