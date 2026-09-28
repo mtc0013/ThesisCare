@@ -16,7 +16,11 @@
     return new Promise((res, rej) => { const s = document.createElement('script'); s.src = SDK; s.onload = res; s.onerror = () => rej(new Error('Could not load Supabase SDK')); document.head.appendChild(s); });
   }
   const ready = live
-    ? loadSdk().then(() => { client = window.supabase.createClient(C.supabaseUrl, C.supabaseAnonKey, { auth: { persistSession: true } }); })
+    ? loadSdk().then(() => {
+        client = window.supabase.createClient(C.supabaseUrl, C.supabaseAnonKey, { auth: { persistSession: true } });
+        // A password-reset email link signs the user in with this event; app.js then asks for a new password.
+        client.auth.onAuthStateChange((event) => { if (event === 'PASSWORD_RECOVERY') window.dispatchEvent(new Event('mrh:password-recovery')); });
+      })
     : Promise.resolve();
 
   // ── Demo store (localStorage) ──
@@ -144,6 +148,11 @@
       async reset(email) {
         await ready;
         const { error } = await client.auth.resetPasswordForEmail(email, { redirectTo: location.href });
+        if (error) throw error;
+      },
+      async updatePassword(password) {
+        await ready;
+        const { error } = await client.auth.updateUser({ password });
         if (error) throw error;
       },
       async signOut() { await ready; if (live) await client.auth.signOut(); ss.set('demo-auth', null); },

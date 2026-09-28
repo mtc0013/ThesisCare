@@ -327,6 +327,35 @@
     return true;
   }
 
+  /* ── Password reset (link from "Forgot password?" email) ──── */
+  window.addEventListener('mrh:password-recovery', () => {
+    const m = document.createElement('div');
+    m.className = 'modal';
+    m.setAttribute('role', 'dialog'); m.setAttribute('aria-modal', 'true');
+    m.innerHTML = `<div class="modal-card"><form novalidate>
+      <h2 class="form-title">Set a new password</h2>
+      <p class="muted small">Choose a new password for your account (at least 8 characters).</p>
+      <div class="field"><label for="np-1">New password</label><input id="np-1" type="password" autocomplete="new-password" minlength="8" required></div>
+      <div class="field"><label for="np-2">Confirm new password</label><input id="np-2" type="password" autocomplete="new-password" minlength="8" required></div>
+      <button class="btn btn-primary btn-lg btn-block" type="submit">Save new password</button>
+      <p class="form-status" role="status" aria-live="polite"></p></form></div>`;
+    document.body.appendChild(m);
+    const f = m.querySelector('form'); const st = m.querySelector('.form-status');
+    m.querySelector('#np-1').focus();
+    f.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const a = m.querySelector('#np-1').value, b = m.querySelector('#np-2').value;
+      st.classList.add('error');
+      if (a.length < 8) { st.textContent = 'Use at least 8 characters.'; return; }
+      if (a !== b) { st.textContent = 'The two passwords do not match.'; return; }
+      try {
+        await store.auth.updatePassword(a);
+        st.classList.remove('error'); st.textContent = 'Password updated.';
+        setTimeout(() => { m.remove(); history.replaceState(null, '', location.pathname); location.reload(); }, 1200);
+      } catch (err) { st.textContent = err.message || 'Could not update the password. Please request a new reset link.'; }
+    });
+  });
+
   /* ── Boot ─────────────────────────────────────────────────── */
   applySettings();
   store.getSettings().then((s) => { S = s; window.MRH.settings = s; applySettings(); initConsent(); initCaptcha(); });

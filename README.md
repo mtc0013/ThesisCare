@@ -3,8 +3,10 @@
 A medical research support website and web app for an India-focused research consultancy. It includes the marketing site, an enquiry and CRM workflow, an admin dashboard, consultation booking, a resource centre and a client portal.
 
 - **Frontend:** a static site built by a zero-dependency Node script (`build.mjs`) and hosted free on **GitHub Pages**.
-- **Backend (optional):** **Supabase** (Postgres, Auth, private file storage and Row Level Security), also on a free tier.
-- **Demo mode:** until Supabase is connected, forms and the admin dashboard still work, but data is stored only in the visitor's own browser. This is useful for previewing. Don't use it for real enquiries.
+- **Backend:** **Supabase** (Postgres, Auth, private file storage and Row Level Security) on the free tier. Project `nltzgbznhcvbrjwlcbig`, connected in `src/config.mjs`.
+- **Live site:** https://mtc0013.github.io/ThesisCare/ · **Admin:** https://mtc0013.github.io/ThesisCare/admin/
+
+> **Day-to-day running (start/stop locally, publishing, users and roles, leads, troubleshooting) is in [docs/OPERATIONS.md](docs/OPERATIONS.md).**
 
 ---
 
@@ -13,45 +15,26 @@ A medical research support website and web app for an India-focused research con
 Requires Node 18 or newer. There is nothing to install.
 
 ```bash
-npm run dev          # builds to dist/ and serves http://localhost:4173
+npm run dev          # builds to dist/ and serves http://localhost:4173 — stop with Ctrl + C
 ```
 
-- Website: `http://localhost:4173/`
-- Admin: `http://localhost:4173/admin/` → **Open demo dashboard**
-- Client portal: `http://localhost:4173/portal/`
+The local preview uses the **real** Supabase database, so delete any test entries afterwards.
 
-## 2. Publish on GitHub Pages
+## 2. Hosting on GitHub Pages (done)
 
-1. Create a new repository on GitHub, `ThesisCare`.
-2. Push this folder:
-   ```bash
-   git remote add origin https://github.com/mtc0013/ThesisCare.git
-   git push -u origin main
-   ```
-3. In the repo, open **Settings → Pages → Build and deployment → Source** and choose **GitHub Actions**.
-4. Every push to `main` now builds and deploys through `.github/workflows/deploy.yml`. Your site is at `https://mtc0013.github.io/ThesisCare/`. The URL prefix is handled automatically.
+- Every push to `main` builds and deploys through `.github/workflows/deploy.yml` in about 1–2 minutes.
+- **Settings → Pages → Source** must be **GitHub Actions**. Don't add GitHub's suggested Jekyll/Static workflows.
+- **Custom domain (optional):** add a `CNAME` file containing your domain to the project root, set the domain in Settings → Pages, add a repository **variable** `SITE_URL=https://www.yourdomain.in`, and update Supabase → Authentication → URL Configuration.
 
-**Custom domain (optional):** add a `CNAME` file containing your domain (e.g. `www.yourdomain.in`) to the project root, set the domain in Settings → Pages, and add a repository **variable** `SITE_URL=https://www.yourdomain.in`.
+## 3. Backend (Supabase) (done)
 
-## 3. Connect the backend (Supabase) — required before going live
+Already completed for this project:
+1. The Free Plan project was created, and `supabase/schema.sql` was run in the SQL Editor. This created all tables (Users/profiles, Leads, Clients, Consultants, Services, Projects, ProjectMilestones, Tasks, Documents, Appointments, Payments, Testimonials, FAQs, BlogPosts, ResearchAreas, Locations, ContactMessages, SiteSettings, ResourceDownloads, ProjectMessages), Row Level Security on every table, and a private `research-files` bucket (10 MB limit; PDF/DOC(X)/XLS(X)/CSV/PPTX only).
+2. The project URL and publishable key are set as defaults in `src/config.mjs`. The publishable key is designed to be public; data is protected by the RLS policies. Environment variables `SUPABASE_URL` / `SUPABASE_ANON_KEY` override them if ever needed.
+3. Authentication → URL Configuration: the Site URL and redirect URLs point to the GitHub Pages site.
+4. The admin account was created and promoted. To add staff, see [docs/OPERATIONS.md §5](docs/OPERATIONS.md#5-users-and-roles).
 
-1. Create a free project at <https://supabase.com> (choose the Mumbai region for India).
-2. Open **SQL Editor**, paste all of `supabase/schema.sql` and click **Run**. This creates:
-   - all tables: Users/profiles, Leads, Clients, Consultants, Services, Projects, ProjectMilestones, Tasks, Documents, Appointments, Payments, Testimonials, FAQs, BlogPosts, ResearchAreas, Locations, ContactMessages, SiteSettings, ResourceDownloads and ProjectMessages
-   - Row Level Security. The public can **submit** forms but can't read anything. Admins see everything, consultants see their assigned or unassigned leads, and clients see only their own projects.
-   - a **private** `research-files` bucket with a 10 MB limit that only accepts PDF/DOC(X)/XLS(X)/CSV/PPTX files
-3. Go to **Authentication → Users → Add user** and create your admin account.
-4. In the SQL Editor, promote it to admin:
-   ```sql
-   update public.profiles set role = 'admin' where email = 'you@yourdomain.in';
-   ```
-   (Use `'consultant'` for team members. Everyone who signs up through the portal becomes a `client`.)
-5. From **Project Settings → API**, copy the Project URL and the `anon` public key. In GitHub, go to **Settings → Secrets and variables → Actions → Variables** and add them as repository variables:
-   - `SUPABASE_URL`
-   - `SUPABASE_ANON_KEY`
-
-   The anon key is designed to be public. Your data is protected by the RLS policies, not by hiding the key.
-6. Re-run the workflow (Actions → Deploy → Run workflow). The admin login then uses real accounts, and enquiries are stored in the database.
+**Rebuilding in a new Supabase project:** run `supabase/schema.sql` in its SQL Editor (safe to re-run), update the two values in `src/config.mjs`, then create and promote an admin user.
 
 ### Email notifications and the automatic reply
 
