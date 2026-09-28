@@ -26,8 +26,9 @@ export const site = {
 
   // Backend (optional). Without these the site runs in "demo mode":
   // forms and the admin dashboard work, but data is stored only in the visitor's browser.
-  supabaseUrl: env.SUPABASE_URL || '',
-  supabaseAnonKey: env.SUPABASE_ANON_KEY || '',
+  // The publishable key is designed to be public; data is protected by Row Level Security.
+  supabaseUrl: env.SUPABASE_URL || 'https://nltzgbznhcvbrjwlcbig.supabase.co',
+  supabaseAnonKey: env.SUPABASE_ANON_KEY || 'sb_publishable_ISKQ00p9aIM4XDOPVYuRpw_iAAtIurS',
 
   // Upload rules (also enforced by the storage bucket in supabase/schema.sql)
   upload: {
