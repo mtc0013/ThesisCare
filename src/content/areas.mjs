@@ -1,0 +1,37 @@
+// Research areas. Set `page: true` on an entry (and add `intro`) to generate
+// a specialty landing page at /research-areas/<slug>/.
+
+export const areas = [
+  ['Cardiology', 'Clinical outcomes, risk scores, ECG and echo parameters, registries and survival analysis.'],
+  ['Neurology', 'Stroke outcomes, scales and scores, epilepsy, neuro-imaging correlations and follow-up studies.'],
+  ['Nephrology', 'CKD progression, dialysis outcomes, AKI biomarkers and longitudinal renal function data.'],
+  ['Oncology', 'Survival and time-to-event analysis, response criteria, prognostic factors and quality of life.'],
+  ['General Medicine', 'Cross-sectional and prospective studies across infectious, metabolic and chronic disease.'],
+  ['General Surgery', 'Surgical outcomes, complication rates, scoring systems and comparative technique studies.'],
+  ['Paediatrics', 'Growth and nutrition, neonatal outcomes, developmental assessment and paediatric scoring systems.'],
+  ['Obstetrics & Gynaecology', 'Maternal and perinatal outcomes, screening tests, induction and intervention comparisons.'],
+  ['Orthopaedics', 'Functional scores, fracture fixation outcomes, radiological union and comparative trials.'],
+  ['Anaesthesiology', 'Randomised comparisons of drugs and techniques, haemodynamic data and pain scores.'],
+  ['Radiology', 'Diagnostic accuracy, inter-observer agreement, ROC analysis and imaging–pathology correlation.'],
+  ['Psychiatry', 'Validated scales, prevalence studies, psychometrics and treatment response.'],
+  ['Dermatology', 'Severity indices, treatment comparisons, quality-of-life measures and clinical photography.'],
+  ['ENT', 'Audiometric outcomes, surgical success, symptom scores and diagnostic evaluation.'],
+  ['Ophthalmology', 'Visual acuity and IOP data, paired-eye analysis, OCT parameters and surgical outcomes.'],
+  ['Pathology', 'Histopathological grading, IHC correlation, diagnostic agreement and cytology studies.'],
+  ['Microbiology', 'Antimicrobial resistance patterns, isolate distribution and diagnostic test evaluation.'],
+  ['Pharmacology', 'Drug utilisation, ADR monitoring, prescription audits and experimental pharmacology.'],
+  ['Community Medicine', 'Community surveys, cluster sampling, KAP studies and public-health programme evaluation.'],
+  ['Emergency Medicine', 'Triage scores, time-critical outcomes and emergency department audits.'],
+  ['Critical Care', 'ICU severity scores, mortality prediction, ventilation outcomes and longitudinal data.'],
+  ['Pulmonology', 'Spirometry, TB and COPD outcomes, sleep studies and respiratory scores.'],
+  ['Gastroenterology', 'Endoscopic findings, liver disease scores, IBD outcomes and diagnostic comparisons.'],
+  ['Endocrinology', 'Diabetes and thyroid outcomes, glycaemic control, metabolic parameters and risk factors.'],
+  ['Dentistry', 'Clinical dental indices, in-vitro studies, comparative materials and oral-health surveys.'],
+  ['Nursing', 'Questionnaire-based studies, educational interventions and quasi-experimental designs.'],
+  ['Physiotherapy', 'Functional outcome scales, rehabilitation protocols and comparative exercise interventions.'],
+].map(([name, text]) => ({
+  name,
+  slug: name.toLowerCase().replace(/&/g, 'and').replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, ''),
+  text,
+  page: false,
+}));
