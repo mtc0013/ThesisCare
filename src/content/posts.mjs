@@ -6,7 +6,7 @@ export const categories = [
   'Publication', 'Research Ethics', 'SPSS', 'R Statistics', 'Reference Management',
 ];
 
-const author = 'MedResearch Hub Editorial Team';
+const author = 'ThesisCare Editorial Team';
 const credentials = 'Research methodology & biostatistics desk';
 
 export const posts = [

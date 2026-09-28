@@ -9,12 +9,12 @@ const env = process.env;
 
 export const site = {
   // Brand — change once here, it flows through every page.
-  brandName: env.BRAND_NAME || 'MedResearch Hub',
-  brandShort: 'MRH',
+  brandName: env.BRAND_NAME || 'ThesisCare',
+  brandShort: 'TC',
   tagline: 'Medical research support, from idea to publication',
 
   // Public URL of the deployed site (used for canonical URLs, sitemap, OG tags).
-  // e.g. https://yourname.github.io/medresearch-hub  or  https://www.yourdomain.in
+  // e.g. https://mtc0013.github.io/ThesisCare  or  https://www.yourdomain.in
   // Origin only (scheme + host) — the path prefix comes from basePath.
   siteUrl: new URL(env.SITE_URL || 'http://localhost:4173').origin,
 

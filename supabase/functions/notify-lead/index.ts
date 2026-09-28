@@ -6,10 +6,10 @@
 // Secrets (Dashboard → Edge Functions → Secrets):
 //   RESEND_API_KEY   — from resend.com (or swap sendEmail() for any provider)
 //   ADMIN_EMAIL      — where new-lead notifications go
-//   FROM_EMAIL       — a verified sender, e.g. "MedResearch Hub <hello@yourdomain.in>"
-//   BRAND_NAME       — e.g. MedResearch Hub
+//   FROM_EMAIL       — a verified sender, e.g. "ThesisCare <hello@yourdomain.in>"
+//   BRAND_NAME       — e.g. ThesisCare
 //   WEBHOOK_SECRET   — same value set as a custom header "x-webhook-secret" on the webhook
-//   SITE_URL         — e.g. https://yourname.github.io/medresearch-hub
+//   SITE_URL         — e.g. https://mtc0013.github.io/ThesisCare
 
 const env = (k: string) => Deno.env.get(k) ?? '';
 const esc = (s: unknown) => String(s ?? '').replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]!));
@@ -30,7 +30,7 @@ Deno.serve(async (req) => {
   const payload = await req.json();
   if (payload.type !== 'INSERT') return new Response('ignored');
   const r = payload.record ?? {};
-  const brand = env('BRAND_NAME') || 'MedResearch Hub';
+  const brand = env('BRAND_NAME') || 'ThesisCare';
   const admin = env('SITE_URL') ? `${env('SITE_URL')}/admin/` : '';
 
   if (payload.table === 'leads') {

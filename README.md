@@ -1,4 +1,4 @@
-# MedResearch Hub
+# ThesisCare
 
 A medical research support website and web app for an India-focused research consultancy. It includes the marketing site, an enquiry and CRM workflow, an admin dashboard, consultation booking, a resource centre and a client portal.
 
@@ -22,14 +22,14 @@ npm run dev          # builds to dist/ and serves http://localhost:4173
 
 ## 2. Publish on GitHub Pages
 
-1. Create a new repository on GitHub, e.g. `medresearch-hub`.
+1. Create a new repository on GitHub, `ThesisCare`.
 2. Push this folder:
    ```bash
-   git remote add origin https://github.com/<you>/medresearch-hub.git
+   git remote add origin https://github.com/mtc0013/ThesisCare.git
    git push -u origin main
    ```
 3. In the repo, open **Settings → Pages → Build and deployment → Source** and choose **GitHub Actions**.
-4. Every push to `main` now builds and deploys through `.github/workflows/deploy.yml`. Your site is at `https://<you>.github.io/medresearch-hub/`. The URL prefix is handled automatically.
+4. Every push to `main` now builds and deploys through `.github/workflows/deploy.yml`. Your site is at `https://mtc0013.github.io/ThesisCare/`. The URL prefix is handled automatically.
 
 **Custom domain (optional):** add a `CNAME` file containing your domain (e.g. `www.yourdomain.in`) to the project root, set the domain in Settings → Pages, and add a repository **variable** `SITE_URL=https://www.yourdomain.in`.
 
@@ -55,11 +55,11 @@ npm run dev          # builds to dist/ and serves http://localhost:4173
 
 ### Email notifications and the automatic reply
 
-`supabase/functions/notify-lead` emails the admin about every new lead, booking or message. It also sends the enquirer the acknowledgement: *"Thank you for contacting MedResearch Hub. We have received your research enquiry and will review your requirements shortly."*
+`supabase/functions/notify-lead` emails the admin about every new lead, booking or message. It also sends the enquirer the acknowledgement: *"Thank you for contacting ThesisCare. We have received your research enquiry and will review your requirements shortly."*
 
 ```bash
 npx supabase functions deploy notify-lead --no-verify-jwt
-npx supabase secrets set RESEND_API_KEY=... ADMIN_EMAIL=... FROM_EMAIL="MedResearch Hub <hello@yourdomain.in>" BRAND_NAME="MedResearch Hub" WEBHOOK_SECRET=<random> SITE_URL=https://<you>.github.io/medresearch-hub
+npx supabase secrets set RESEND_API_KEY=... ADMIN_EMAIL=... FROM_EMAIL="ThesisCare <hello@yourdomain.in>" BRAND_NAME="ThesisCare" WEBHOOK_SECRET=<random> SITE_URL=https://mtc0013.github.io/ThesisCare
 ```
 
 Then go to **Database → Webhooks → Create**. Set it to fire on INSERT on `leads` (and optionally `appointments` and `contact_messages`), call the `notify-lead` function, and add the HTTP header `x-webhook-secret: <same random value>`.
@@ -77,7 +77,7 @@ All of these are deliberate. The site never invents facts.
 | What | Where | Default |
 |---|---|---|
 | Phone, WhatsApp, email, address, map, social links, hours, CTA text, GA4 ID, Meta Pixel ID | **Admin → Settings** (no code needed) | Empty → hidden on the site |
-| Brand name | `src/config.mjs` → `brandName` (or `BRAND_NAME` env) | "MedResearch Hub" |
+| Brand name | `src/config.mjs` → `brandName` (or `BRAND_NAME` env) | "ThesisCare" |
 | Team profiles | `src/content/people.mjs` → set `sample: false` | 5 profiles labelled "Sample profile" |
 | Testimonials | `src/content/people.mjs` → only shown with `consentToPublish: true` | Labelled placeholders |
 | Statistics strip | `src/config.mjs` → `settings.stats` | Hidden (empty) |

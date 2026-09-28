@@ -1,5 +1,5 @@
 -- ════════════════════════════════════════════════════════════════════
---  MedResearch Hub — database schema, security policies and storage
+--  ThesisCare — database schema, security policies and storage
 --  Run once in Supabase: Dashboard → SQL Editor → paste → Run.
 --  Safe to re-run (uses IF NOT EXISTS / OR REPLACE / DROP POLICY IF EXISTS).
 -- ════════════════════════════════════════════════════════════════════
