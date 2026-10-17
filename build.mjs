@@ -132,6 +132,8 @@ const today = new Date().toISOString().slice(0, 10);
 writeFileSync(join(out, 'sitemap.xml'), `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${pages
   .map((p) => `  <url><loc>${site.siteUrl}${site.basePath}${p.path}</loc><lastmod>${today}</lastmod><priority>${p.priority}</priority></url>`)
   .join('\n')}\n</urlset>\n`);
+// The sales demo also serves the platform's one-page sales sheet (linked from cold emails).
+if (site.demo && existsSync(join(root, 'sales/ThesisCare-Platform-Sales-Sheet.pdf'))) cpSync(join(root, 'sales/ThesisCare-Platform-Sales-Sheet.pdf'), join(out, 'sales-sheet.pdf'));
 if (!site.demo && existsSync(join(root, 'CNAME'))) cpSync(join(root, 'CNAME'), join(out, 'CNAME'));
 
 console.log(`${site.demo ? '[DEMO] ' : ''}Built ${pages.length} indexed pages (+ apps) → dist/   base: ${site.basePath}   backend: ${site.supabaseUrl ? 'Supabase' : 'DEMO MODE (browser storage)'}`);
