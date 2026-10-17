@@ -82,7 +82,8 @@
       const at = (d) => new Date(now - d * day).toISOString();
       const ymd = (d) => new Date(now + d * day).toISOString().slice(0, 10);
       const sample = [
-        ['Sample Lead A (demo)', 'MD/MS Student', 'Biostatistics', 'MD General Medicine', 'Statistical Analysis', 'New', 0, null, 'Need regression analysis and interpretation for my thesis data (n = 180).'],
+        // Sample leads are dated hours/days back so enquiries a visitor submits always appear at the top.
+        ['Sample Lead A (demo)', 'MD/MS Student', 'Biostatistics', 'MD General Medicine', 'Statistical Analysis', 'New', 0.25, null, 'Need regression analysis and interpretation for my thesis data (n = 180).'],
         ['Sample Lead B (demo)', 'DNB Resident', 'Research Protocol', 'DNB Orthopaedics', 'Proposal / Synopsis', 'Contacted', 1, ymd(0), 'Synopsis due to the department next month; need help with sample size.'],
         ['Sample Lead C (demo)', 'Faculty', 'Systematic Review', 'Community Medicine', 'Systematic Review', 'Consultation Scheduled', 3, ymd(2), 'Planning a meta-analysis with two colleagues; need search strategy and forest plots.'],
         ['Sample Lead D (demo)', 'PhD Scholar', 'Manuscript Editing', 'PhD Pharmacology', 'Manuscript Preparation', 'Proposal Sent', 5, ymd(4), 'Manuscript ready for submission; need language editing and journal formatting.'],
