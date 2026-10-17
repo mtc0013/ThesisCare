@@ -14,13 +14,14 @@ import { checklists } from './src/content/resources.mjs';
 import { legal } from './src/content/legal.mjs';
 import { locations } from './src/content/locations.mjs';
 import { seoPages } from './src/content/seo-pages.mjs';
-import { layout, url } from './src/templates/layout.mjs';
+import { layout, url, logoMark } from './src/templates/layout.mjs';
 import { breadcrumbSchema, faqSchema, ROLES, STAGES, SERVICE_OPTIONS } from './src/templates/components.mjs';
 import * as P from './src/templates/pages.mjs';
 import { adminShell, portalShell } from './src/templates/apps.mjs';
 
 const root = dirname(fileURLToPath(import.meta.url));
-const out = join(root, 'dist');
+// OUT_DIR lets the workflow build the sales demo into dist/demo next to the real site.
+const out = join(root, process.env.OUT_DIR || 'dist');
 rmSync(out, { recursive: true, force: true });
 mkdirSync(out, { recursive: true });
 
@@ -123,12 +124,14 @@ writeFileSync(join(out, 'assets/js/config.js'), `window.MRH_CONFIG=${JSON.string
   options: { roles: ROLES, stages: STAGES, services: SERVICE_OPTIONS },
 })};\n`);
 writeFileSync(join(out, 'search-index.json'), JSON.stringify(index));
+// Favicon in the brand colours (unless a custom logo file is configured).
+if (!site.logo.imageUrl) writeFileSync(join(out, 'assets/img/favicon.svg'), logoMark('fav', 'fav').replace(' aria-hidden="true"', ''));
 writeFileSync(join(out, '.nojekyll'), '');
 writeFileSync(join(out, 'robots.txt'), `User-agent: *\nAllow: /\nDisallow: ${site.basePath}admin/\nDisallow: ${site.basePath}portal/\n\nSitemap: ${site.siteUrl}${site.basePath}sitemap.xml\n`);
 const today = new Date().toISOString().slice(0, 10);
 writeFileSync(join(out, 'sitemap.xml'), `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${pages
   .map((p) => `  <url><loc>${site.siteUrl}${site.basePath}${p.path}</loc><lastmod>${today}</lastmod><priority>${p.priority}</priority></url>`)
   .join('\n')}\n</urlset>\n`);
-if (existsSync(join(root, 'CNAME'))) cpSync(join(root, 'CNAME'), join(out, 'CNAME'));
+if (!site.demo && existsSync(join(root, 'CNAME'))) cpSync(join(root, 'CNAME'), join(out, 'CNAME'));
 
-console.log(`Built ${pages.length} indexed pages (+ apps) → dist/   base: ${site.basePath}   backend: ${site.supabaseUrl ? 'Supabase' : 'DEMO MODE (browser storage)'}`);
+console.log(`${site.demo ? '[DEMO] ' : ''}Built ${pages.length} indexed pages (+ apps) → dist/   base: ${site.basePath}   backend: ${site.supabaseUrl ? 'Supabase' : 'DEMO MODE (browser storage)'}`);

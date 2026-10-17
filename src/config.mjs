@@ -7,11 +7,29 @@
 
 const env = process.env;
 
+// DEMO=1 builds a sales demo: no database (browser-only data), sample admin data,
+// a "live demo" banner and no search-engine indexing.
+const demo = env.DEMO === '1';
+
 export const site = {
-  // Brand — change once here, it flows through every page.
+  // ── BRAND — rebranding for a new client is just this block (see docs/REBRANDING.md) ──
   brandName: env.BRAND_NAME || 'ThesisCare',
   brandShort: 'TC',
   tagline: 'Medical research support, from idea to publication',
+
+  // Brand colours. Everything on the site (buttons, gradients, logo, footer, admin) is derived from these.
+  theme: {
+    primary: env.BRAND_PRIMARY || '#0B3B6F',          // main brand colour: buttons, logo, headings accents
+    primaryDark: env.BRAND_PRIMARY_DARK || '#051A33', // footer, dark panels, admin sidebar
+    accent: env.BRAND_ACCENT || '#0E9F9A',            // secondary colour: icons, links, gradient end
+    highlight: env.BRAND_HIGHLIGHT || '#7FF0DF',      // bright highlight used on dark backgrounds
+  },
+
+  // Logo. Leave imageUrl empty to use the built-in mark (drawn in the theme colours above),
+  // or put a logo file in src/assets/img/ and set e.g. 'assets/img/logo.svg' (square works best).
+  logo: { imageUrl: env.BRAND_LOGO || '' },
+
+  demo,
 
   // Public URL of the deployed site (used for canonical URLs, sitemap, OG tags).
   // e.g. https://mtc0013.github.io/ThesisCare  or  https://www.yourdomain.in
@@ -27,8 +45,8 @@ export const site = {
   // Backend (optional). Without these the site runs in "demo mode":
   // forms and the admin dashboard work, but data is stored only in the visitor's browser.
   // The publishable key is designed to be public; data is protected by Row Level Security.
-  supabaseUrl: env.SUPABASE_URL || 'https://nltzgbznhcvbrjwlcbig.supabase.co',
-  supabaseAnonKey: env.SUPABASE_ANON_KEY || 'sb_publishable_ISKQ00p9aIM4XDOPVYuRpw_iAAtIurS',
+  supabaseUrl: demo ? '' : env.SUPABASE_URL || 'https://nltzgbznhcvbrjwlcbig.supabase.co',
+  supabaseAnonKey: demo ? '' : env.SUPABASE_ANON_KEY || 'sb_publishable_ISKQ00p9aIM4XDOPVYuRpw_iAAtIurS',
 
   // Upload rules (also enforced by the storage bucket in supabase/schema.sql)
   upload: {

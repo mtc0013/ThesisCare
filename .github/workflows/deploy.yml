@@ -36,6 +36,15 @@ jobs:
           SITE_URL: ${{ vars.SITE_URL || steps.pages.outputs.base_url }}
           SUPABASE_URL: ${{ vars.SUPABASE_URL }}
           SUPABASE_ANON_KEY: ${{ vars.SUPABASE_ANON_KEY }}
+      # Sales demo for prospective buyers: browser-only data, sample admin data, not indexed.
+      - name: Build sales demo
+        run: node build.mjs
+        env:
+          DEMO: '1'
+          OUT_DIR: dist/demo
+          BRAND_NAME: MedResearch Hub
+          BASE_PATH: ${{ steps.pages.outputs.base_path }}/demo/
+          SITE_URL: ${{ vars.SITE_URL || steps.pages.outputs.base_url }}
       - uses: actions/upload-pages-artifact@v3
         with:
           path: dist

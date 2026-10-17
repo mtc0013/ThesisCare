@@ -11,16 +11,26 @@ export const url = (p = '') => site.basePath + String(p).replace(/^\//, '');
 
 export const brand = site.brandName;
 
+const T = site.theme;
+
+// Built-in logo mark, drawn in the theme colours (also used to generate the favicon).
+export const logoMark = (id = 'h', cls = 'logo-mark') => `<svg class="${cls}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40" aria-hidden="true">
+    <defs><linearGradient id="lg-${id}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${T.primary}"/><stop offset="1" stop-color="${T.accent}"/></linearGradient></defs>
+    <rect width="40" height="40" rx="11" fill="url(#lg-${id})"/>
+    <path d="M8 24h6l2.5-6 4 11 3-8H32" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M26 7.5v7M22.5 11h7" stroke="${T.highlight}" stroke-width="2.6" stroke-linecap="round"/>
+  </svg>`;
+
 export const logo = (cls = '') => `
 <a class="logo ${cls}" href="${url('')}" aria-label="${esc(brand)} home">
-  <svg class="logo-mark" viewBox="0 0 40 40" aria-hidden="true">
-    <defs><linearGradient id="lg-${cls || 'h'}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#0B3B6F"/><stop offset="1" stop-color="#0E9F9A"/></linearGradient></defs>
-    <rect width="40" height="40" rx="11" fill="url(#lg-${cls || 'h'})"/>
-    <path d="M8 24h6l2.5-6 4 11 3-8H32" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
-    <path d="M26 7.5v7M22.5 11h7" stroke="#7FF0DF" stroke-width="2.6" stroke-linecap="round"/>
-  </svg>
+  ${site.logo.imageUrl ? `<img class="logo-mark" src="${url(site.logo.imageUrl)}" alt="">` : logoMark(cls || 'h')}
   <span class="logo-text" data-setting="companyName">${esc(brand)}</span>
 </a>`;
+
+// Theme colours → CSS variables (overrides the defaults in styles.css).
+const themeStyle = `<style>:root{--navy-800:${T.primary};--blue-700:${T.primary};--blue-600:${T.primary};--navy-900:${T.primaryDark};--navy-950:${T.primaryDark};--teal-600:${T.accent};--teal-500:${T.accent};--highlight:${T.highlight};--teal-100:color-mix(in srgb,${T.accent} 16%,#fff);--teal-50:color-mix(in srgb,${T.accent} 7%,#fff);--blue-50:color-mix(in srgb,${T.primary} 7%,#fff);--grad:linear-gradient(135deg,${T.primary} 0%,${T.primary} 40%,${T.accent} 100%)}</style>`;
+
+const demoBanner = () => `<div class="demo-banner" role="note">${icon('sparkle')}<span><strong>Live demo.</strong> Try everything: forms and the admin dashboard store data only in your browser.</span><a href="${url('admin/')}">Open the admin dashboard →</a></div>`;
 
 const navItems = [
   { label: 'Home', href: '' },
@@ -181,7 +191,7 @@ export function layout({ title, description, path = '', body, schema = [], noind
 <title>${esc(fullTitle)}</title>
 <meta name="description" content="${esc(desc)}">
 <link rel="canonical" href="${esc(canonical)}">
-${noindex ? '<meta name="robots" content="noindex, nofollow">' : ''}
+${noindex || site.demo ? '<meta name="robots" content="noindex, nofollow">' : ''}
 ${settings.gscVerification ? `<meta name="google-site-verification" content="${esc(settings.gscVerification)}">` : ''}
 <meta property="og:type" content="${ogType}">
 <meta property="og:site_name" content="${esc(brand)}">
@@ -190,14 +200,16 @@ ${settings.gscVerification ? `<meta name="google-site-verification" content="${e
 <meta property="og:url" content="${esc(canonical)}">
 <meta property="og:locale" content="${site.locale}">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="theme-color" content="#0B3B6F">
+<meta name="theme-color" content="${T.primary}">
 <link rel="icon" href="${url('assets/img/favicon.svg')}" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="${url('assets/css/styles.css')}">
+${themeStyle}
 ${ld}
 </head>
-<body class="${bodyClass}">
+<body class="${bodyClass}${site.demo ? ' is-demo' : ''}">
+${site.demo && !bare ? demoBanner() : ''}
 ${bare ? '' : header(path)}
 <main id="main">
 ${body}

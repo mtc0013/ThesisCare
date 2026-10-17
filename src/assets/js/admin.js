@@ -78,9 +78,27 @@
     try {
       if (localStorage.getItem('mrh:demo-seeded')) return;
       localStorage.setItem('mrh:demo-seeded', '1');
-      const rows = JSON.parse(localStorage.getItem('mrh:leads') || '[]');
-      rows.push({ id: store.uuid(), created_at: new Date().toISOString(), full_name: 'Example Lead (demo data)', phone: '+91 00000 00000', email: 'example@example.test', user_type: 'MD/MS Student', service: 'Biostatistics', specialty: 'MD General Medicine', institution: 'Example Institution', city: 'Example City', research_stage: 'Statistical Analysis', timeline: '1 – 3 months', message: 'This is sample demo data so you can explore the dashboard. Submit the enquiry form on the website to create real leads in demo mode.', attachments: [], source: 'demo', status: 'New', activity: [] });
-      localStorage.setItem('mrh:leads', JSON.stringify(rows));
+      const day = 864e5, now = Date.now();
+      const at = (d) => new Date(now - d * day).toISOString();
+      const ymd = (d) => new Date(now + d * day).toISOString().slice(0, 10);
+      const sample = [
+        ['Sample Lead A (demo)', 'MD/MS Student', 'Biostatistics', 'MD General Medicine', 'Statistical Analysis', 'New', 0, null, 'Need regression analysis and interpretation for my thesis data (n = 180).'],
+        ['Sample Lead B (demo)', 'DNB Resident', 'Research Protocol', 'DNB Orthopaedics', 'Proposal / Synopsis', 'Contacted', 1, ymd(0), 'Synopsis due to the department next month; need help with sample size.'],
+        ['Sample Lead C (demo)', 'Faculty', 'Systematic Review', 'Community Medicine', 'Systematic Review', 'Consultation Scheduled', 3, ymd(2), 'Planning a meta-analysis with two colleagues; need search strategy and forest plots.'],
+        ['Sample Lead D (demo)', 'PhD Scholar', 'Manuscript Editing', 'PhD Pharmacology', 'Manuscript Preparation', 'Proposal Sent', 5, ymd(4), 'Manuscript ready for submission; need language editing and journal formatting.'],
+        ['Sample Lead E (demo)', 'MBBS Student', 'Research Methodology', 'MBBS Final Year', 'Topic Selection', 'In Progress', 9, null, 'Short-term studentship project; need help refining the research question.'],
+      ];
+      const leads = sample.map(([n, role, svc, spec, stage, status, ago, fu, msg]) => ({
+        id: store.uuid(), created_at: at(ago), full_name: n, phone: '+91 00000 00000', email: 'sample@example.test', user_type: role, service: svc,
+        specialty: spec, institution: 'Sample Medical College', city: 'Sample City', research_stage: stage, timeline: '1 – 3 months', message: msg,
+        attachments: [], source: 'demo', status, follow_up_date: fu, activity: status === 'New' ? [] : [{ at: at(ago - 0.5), by: 'Demo user', text: 'Status: New → ' + status }],
+      }));
+      localStorage.setItem('mrh:leads', JSON.stringify(JSON.parse(localStorage.getItem('mrh:leads') || '[]').concat(leads)));
+      localStorage.setItem('mrh:appointments', JSON.stringify([{ id: store.uuid(), created_at: at(1), name: 'Sample Booking (demo)', email: 'sample@example.test', phone: '+91 00000 00000', consultation_type: '30-minute consultation', preferred_date: ymd(2), preferred_time: '11:00', mode: 'Video call', notes: 'Would like to discuss my thesis analysis plan.', status: 'Requested' }]));
+      localStorage.setItem('mrh:contact_messages', JSON.stringify([{ id: store.uuid(), created_at: at(2), name: 'Sample Message (demo)', email: 'sample@example.test', phone: '', subject: 'Pricing question', message: 'Do you offer milestone-based payment for thesis guidance?', status: 'New' }]));
+      const pid = store.uuid();
+      localStorage.setItem('mrh:projects', JSON.stringify([{ id: pid, created_at: at(9), title: 'Research Methodology — Sample Lead E (demo)', client_name: 'Sample Lead E (demo)', client_email: 'sample@example.test', service: 'Research Methodology', status: 'In Progress', due_date: ymd(30), notes: '' }]));
+      localStorage.setItem('mrh:project_milestones', JSON.stringify(['Research question', 'Study design', 'Protocol', 'Sample size', 'Data analysis', 'Manuscript', 'Final review'].map((t, i) => ({ id: store.uuid(), created_at: at(9), project_id: pid, title: t, position: i, done: i < 3 }))));
     } catch (e) {}
   }
 

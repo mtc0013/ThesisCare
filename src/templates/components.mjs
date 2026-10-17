@@ -314,19 +314,19 @@ export const heroVisual = () => `
     <div class="hv-head"><span class="dot"></span><span class="dot"></span><span class="dot"></span><strong>Survival analysis</strong><em>Kaplan–Meier</em></div>
     <svg viewBox="0 0 300 150" class="hv-chart">
       <g stroke="currentColor" opacity=".12"><path d="M30 20h260M30 55h260M30 90h260M30 125h260"/></g>
-      <path d="M30 20h40v12h30v10h40v14h35v8h45v12h40" fill="none" stroke="#0E9F9A" stroke-width="3"/>
-      <path d="M30 20h25v22h35v20h30v18h40v16h40v10h60" fill="none" stroke="#1D4E89" stroke-width="3" stroke-dasharray="1 0"/>
-      <path d="M30 20h25v22h35v20h30v18h40v16h40v10h60" fill="none" stroke="#1D4E89" stroke-width="3" opacity=".25" transform="translate(0 6)"/>
+      <path d="M30 20h40v12h30v10h40v14h35v8h45v12h40" fill="none" style="stroke:var(--teal-600)" stroke-width="3"/>
+      <path d="M30 20h25v22h35v20h30v18h40v16h40v10h60" fill="none" style="stroke:var(--blue-700)" stroke-width="3" stroke-dasharray="1 0"/>
+      <path d="M30 20h25v22h35v20h30v18h40v16h40v10h60" fill="none" style="stroke:var(--blue-700)" stroke-width="3" opacity=".25" transform="translate(0 6)"/>
       <path d="M30 10v125h260" fill="none" stroke="currentColor" opacity=".35"/>
     </svg>
-    <div class="hv-legend"><span><i style="background:#0E9F9A"></i>Group A</span><span><i style="background:#1D4E89"></i>Group B</span><span class="mono">log-rank p = 0.02</span></div>
+    <div class="hv-legend"><span><i style="background:var(--teal-600)"></i>Group A</span><span><i style="background:var(--blue-700)"></i>Group B</span><span class="mono">log-rank p = 0.02</span></div>
   </div>
   <div class="hv-card hv-forest">
     <strong>Meta-analysis</strong>
     <svg viewBox="0 0 180 90"><path d="M90 5v80" stroke="currentColor" opacity=".3" stroke-dasharray="3 3"/>
-      <g stroke="#1D4E89" stroke-width="2"><path d="M40 15h60M55 32h55M30 49h50M60 66h40"/></g>
-      <g fill="#1D4E89"><rect x="66" y="11" width="8" height="8"/><rect x="78" y="28" width="10" height="8"/><rect x="50" y="45" width="7" height="8"/><rect x="76" y="62" width="9" height="8"/></g>
-      <path d="M62 82l10-5 10 5-10 5z" fill="#0E9F9A"/></svg>
+      <g style="stroke:var(--blue-700)" stroke-width="2"><path d="M40 15h60M55 32h55M30 49h50M60 66h40"/></g>
+      <g style="fill:var(--blue-700)"><rect x="66" y="11" width="8" height="8"/><rect x="78" y="28" width="10" height="8"/><rect x="50" y="45" width="7" height="8"/><rect x="76" y="62" width="9" height="8"/></g>
+      <path d="M62 82l10-5 10 5-10 5z" style="fill:var(--teal-600)"/></svg>
   </div>
   <div class="hv-card hv-check">
     <strong>Protocol review</strong>
