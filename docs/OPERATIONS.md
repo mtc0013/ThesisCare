@@ -275,7 +275,10 @@ Check these on the **live site** after the deploy finishes, and on a phone as we
 | Supabase Free | 500 MB database, 1 GB file storage, 50,000 monthly active users | Files are the likeliest limit. Delete old project files you no longer need. |
 
 - The Supabase organisation is on the **Free Plan** with no payment method, so **nothing can be charged**. Don't add a card or upgrade unless you decide to.
-- ⚠️ **Supabase pauses free projects after about 7 days without activity.** Normal website visits and form submissions count as activity. If the project is paused, forms and admin sign-in stop working. Fix: open the Supabase dashboard and click **Restore project** (takes a few minutes).
+- ⚠️ **Supabase pauses free projects after 7 days without activity.** When paused, every form shows "Sorry — something went wrong while sending" and admin sign-in fails. No data is lost.
+  - **Prevention (automatic):** `.github/workflows/keep-alive.yml` sends one small read request every 3 days, so the project never counts as inactive. If that request fails, the job fails and GitHub emails you, which is your early warning.
+  - **GitHub turns off scheduled jobs in a repository with no commits for 60 days.** If you get an email saying the keep-alive workflow was disabled, open **Actions → Keep Supabase awake → Enable workflow**, or just push any small change.
+  - **Fix if paused:** sign in at https://supabase.com/dashboard, open the ThesisCare project and click **Restore project**. It takes a few minutes; then run **Actions → Keep Supabase awake → Run workflow** to confirm it responds.
 - Check usage: Supabase → organisation **Billing / Usage**.
 
 ---
@@ -288,7 +291,7 @@ Check these on the **live site** after the deploy finishes, and on a phone as we
 | Site doesn't show my latest change | Deploy still running, or browser cache | Check the Actions tab, then **Ctrl + F5** |
 | `npm run dev` → "address already in use :::4173" | Another preview is running | §2 "Port 4173 is already in use" |
 | Build says `backend: DEMO MODE` | Supabase settings missing from `src/config.mjs` | Confirm `supabaseUrl` / `supabaseAnonKey` are set in `src/config.mjs` |
-| Form says "Sorry — something went wrong" | Supabase project paused, or network problem | Restore the project in Supabase (§9); try again |
+| Form says "Sorry — something went wrong" | Supabase project paused (most likely), or network problem | Restore the project in Supabase (§9); check the keep-alive workflow is enabled |
 | File upload fails | Wrong file type, or over 10 MB | Only PDF/DOC/DOCX/XLS/XLSX/CSV/PPTX, max 10 MB |
 | "This account does not have staff access" | User is a client | Promote them (§5) |
 | "Invalid login credentials" | Wrong password, or user not confirmed | Reset password (§4); in Supabase make sure the user is confirmed |
