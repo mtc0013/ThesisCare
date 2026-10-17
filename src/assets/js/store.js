@@ -87,7 +87,13 @@
 
     async remove(table, id) {
       await ready;
-      if (live) { const { error } = await client.from(table).delete().eq('id', id); if (error) throw error; return; }
+      if (live) {
+        // .select() returns the deleted rows, so a delete blocked by permissions is reported instead of silently doing nothing.
+        const { data, error } = await client.from(table).delete().eq('id', id).select('id');
+        if (error) throw error;
+        if (!data || !data.length) throw new Error('Not deleted — only admins can delete records.');
+        return;
+      }
       ls.set(table, ls.get(table, []).filter((r) => r.id !== id));
     },
 
@@ -101,6 +107,12 @@
         if (error) throw error;
       }
       return { path, name: file.name, size: file.size, type: file.type };
+    },
+    async removeFiles(paths) {
+      await ready;
+      if (!live || !paths.length) return;
+      const { error } = await client.storage.from(BUCKET).remove(paths);
+      if (error) throw error;
     },
     async fileUrl(path) {
       await ready;

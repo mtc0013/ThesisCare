@@ -239,7 +239,19 @@
         <h3>Activity</h3>
         <ul class="activity">${(l.activity || []).slice().reverse().map((a) => `<li>${esc(a.text)}<time>${fmtDT(a.at)} · ${esc(a.by || '')}</time></li>`).join('') || '<li class="muted">No activity yet.</li>'}</ul>
       </div>
-      <div class="drawer-foot"><button class="btn btn-outline" data-to-project>Convert to project</button><button class="btn btn-primary" data-save>Save changes</button></div>`);
+      <div class="drawer-foot">${isAdmin() ? '<button class="btn btn-danger" data-delete style="margin-right:auto">Delete lead</button>' : ''}<button class="btn btn-outline" data-to-project>Convert to project</button><button class="btn btn-primary" data-save>Save changes</button></div>`);
+    const del = $('[data-delete]', drawer);
+    del && del.addEventListener('click', async () => {
+      const files = (l.attachments || []).length;
+      if (!confirm(`Permanently delete the lead "${l.full_name}"${files ? ` and its ${files} uploaded file(s)` : ''}?\n\nThis cannot be undone.`)) return;
+      del.disabled = true;
+      try {
+        await store.removeFiles((l.attachments || []).map((a) => a.path).filter(Boolean));
+        await store.remove('leads', l.id);
+        cache.leads = (cache.leads || []).filter((x) => x.id !== l.id);
+        toast('Lead deleted'); closeDrawer(); go(tab);
+      } catch (e) { del.disabled = false; err(e); }
+    });
     $$('[data-file]', drawer).forEach((b) => b.addEventListener('click', async () => {
       try { const u = await store.fileUrl(l.attachments[+b.dataset.file].path); window.open(u, '_blank', 'noopener'); } catch (e) { err(e); }
     }));
@@ -288,9 +300,15 @@
         <div class="field"><label for="sd-status">Status</label><select id="sd-status">${opt(statuses, r.status)}</select></div>
         <div class="field"><label for="sd-notes">Internal notes</label><textarea id="sd-notes" rows="3">${esc(r.staff_notes || '')}</textarea></div>
       </div>
-      <div class="drawer-foot"><button class="btn btn-primary" data-save>Save</button></div>`);
+      <div class="drawer-foot">${isAdmin() ? '<button class="btn btn-danger" data-delete style="margin-right:auto">Delete</button>' : ''}<button class="btn btn-primary" data-save>Save</button></div>`);
     $('[data-save]', drawer).addEventListener('click', async () => {
       try { await store.update(table, r.id, { status: $('#sd-status').value, staff_notes: $('#sd-notes').value }); toast('Saved'); closeDrawer(); go(tab); } catch (e) { err(e); }
+    });
+    const del = $('[data-delete]', drawer);
+    del && del.addEventListener('click', async () => {
+      if (!confirm(`Permanently delete this entry from "${r.name}"?\n\nThis cannot be undone.`)) return;
+      del.disabled = true;
+      try { await store.remove(table, r.id); cache[table] = null; toast('Deleted'); closeDrawer(); go(tab); } catch (e) { del.disabled = false; err(e); }
     });
   }
 

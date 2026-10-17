@@ -207,9 +207,11 @@ Files are private. Click **Open** in a lead to download through a link that expi
 
 Leads, Bookings and Resource leads each have an **Export CSV** button. The Free Plan's backups aren't downloadable, so exporting regularly is your safety copy.
 
-### Delete a lead (e.g. a test or spam entry)
+### Delete a lead, booking or message (e.g. a test or spam entry)
 
-The dashboard has no delete button, to prevent accidents. In Supabase **SQL Editor**:
+**In the admin dashboard (admins only):** open the lead and click **Delete lead** (bottom left of the panel), then confirm. This permanently removes the lead **and its uploaded files**. Bookings and messages have a **Delete** button in the same place. Consultants don't see these buttons, and the database refuses deletes from anyone who isn't an admin.
+
+**Alternative, in Supabase SQL Editor** (e.g. to delete many at once):
 
 ```sql
 -- 1. Find it
